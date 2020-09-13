@@ -1,14 +1,14 @@
- /*
- COFFEESHOP. Компания EspressoBiancci заказывает разработку системы управления меню для своего кофейного аппарата LEI700. 
+/*
+COFFEESHOP. Компания EspressoBiancci заказывает разработку системы управления меню для своего кофейного аппарата LEI700.
 Аппарат готовит кофе трех видов: Espresso, Cappuccino, Latte
 После ввода PIN:
 * Просмотр баланса
 * Просмотр кол-ва оставшихся пустых стаканчиков
-* Изъятие выручки 
+* Изъятие выручки
 Примечания:
-* Программно-аппаратный комплекс LEI700 поддерживает языки: Assembler, C, C++.     
+* Программно-аппаратный комплекс LEI700 поддерживает языки: Assembler, C, C++.
 * PIN - специальный код из 4 цифр, предоставляемый EspressoBiancci представителям сервиса под роспись.
- 
+
 + 1. Разделитесь по парам
 - 2. Договоритесь с напарником о времени митинга в скайпе  (1-2 раза в неделю) и явно запишите его
 2. Работая в паре, обсудите проект. Помните, что хороший код - надежный, продумайте, какие исключительные ситуации могут возникнуть при заказе кофе и работе сотрудников сервиса
@@ -30,32 +30,35 @@ using namespace std;
 
 int initializationCoffeeMachine(double balance, int cups, int amountCoffee, int amountMilk, int amountWate, int amountSugar);
 void outputGreeting();
-void printMainMenu();
+void printMenu();
 void cookEspresso();
 void cookCappuccino();
 void cookLatte();
-void printServiceMenu();
+void openServiceMenu();
 void autentification();
 int howMuchSugarUse();
 int inputAmountSugar();
 
+void checkSugar();
+
+// все переменные стали глобальными
+int userChoice = 0;
+double balance = 100.0;
+int cups = 50;
+int amountCoffee = 1000;    // gramme
+int amountMilk = 1000;      // milliliters
+int amountWater = 10000;    // milliliters
+int amountSugar = 1000;     // gramme
+
 int main()
 {
-    int userChoice = 0;
-    double balance = 100.0;
-    int cups = 50;
-    int amountCoffee = 1000;    // gramme
-    int amountMilk = 1000;      // milliliters
-    int amountWater = 10000;    // milliliters
-    int amountSugar = 1000;     // gramme
-
     if (int result = initializationCoffeeMachine(balance, cups, amountCoffee, amountMilk, amountWater, amountSugar) != 0)
         return result;
-
-    void outputGreeting();
+    
+    outputGreeting();
 
     while (true) {
-        printMainMenu();
+        printMenu();
         cin >> userChoice;
         if (userChoice == 1)
             cookEspresso();
@@ -89,7 +92,7 @@ void outputGreeting() {
     cout << "Welcome to the EspressoBiancci coffee machine." << endl;
 }
 
-void printMainMenu() {
+void printMenu() {
     cout << endl << "1. Espresso" << endl;
     cout << "2. Cappuccino" << endl;
     cout << "3. Latte" << endl;
@@ -98,7 +101,9 @@ void printMainMenu() {
 }
 
 void cookEspresso() {
+    howMuchSugarUse();
     cout << "Espresso is ready." << endl;
+    checkSugar();  // исключительно для проверки
 }
 
 void cookCappuccino() {
@@ -109,14 +114,8 @@ void cookLatte() {
     cout << "Cappuccino is ready" << endl;
 }
 
-void printServiceMenu() {
-    cout << endl << "Service menu LEI700" << endl;
-    cout << "1. Cash transactions" << endl;
-    cout << "2. View the amount of ingredients remaining" << endl;
-
-    cout << "5. Software version" << endl;
-
-    cout << "Your choice? ";
+void openServiceMenu() {
+    cout << "Service is open." << endl;
 }
 
 void autentification() {
@@ -124,14 +123,14 @@ void autentification() {
     cout << "Please, enter your PIN: ";
     cin >> pin;
     if (pin == PIN)
-        printServiceMenu();
+        openServiceMenu();
     else
         cout << "Your PIN is not valid." << endl;
 }
 
 int howMuchSugarUse() {
     int sugar = 0;
-    cout << "Do you want to add sugar? ";
+    cout << "Do you want to add sugar? [ NO 0 | YES 1 ]";
     cin >> sugar;
     if (sugar > 0)
         inputAmountSugar();
@@ -140,11 +139,19 @@ int howMuchSugarUse() {
 
 int inputAmountSugar() {
     int spoons = 0;
-    cout << "How much spoons of sugar do you want? ";
+    cout << "How much spoons of sugar do you want? [ ONE SPOON 1 | TWO SPOONS 2 ]";
     cin >> spoons;
-    if (spoons == 1)
+    if (spoons == 1) {
         cout << "One spoon of sugar.";
-    else if (spoons == 2)
+        amountSugar -= 5; // -5 gramme of sugar
+    }
+    else if (spoons == 2) {
         cout << "Two spoons of sugar.";
+        amountSugar -= 10;
+    }
     return 0;
+}
+
+void checkSugar() {         //глобальная переменная хранит остаток
+    cout << amountSugar;
 }
