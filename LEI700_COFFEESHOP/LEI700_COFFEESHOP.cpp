@@ -115,7 +115,14 @@ void cookLatte() {
 }
 
 void openServiceMenu() {
-    cout << "Service is open." << endl;
+    cout << endl << "Service menu LEI700" << endl;
+    cout << "1. Cash transactions" << endl;
+    cout << "2. View the amount of ingredients remaining" << endl;
+    cout << "3. Viewing the logs of the coffee machine" << endl;
+    cout << "4. Software version" << endl;
+    cout << "5. Shutdown coffee machine" << endl;
+
+    cout << "Your choice? ";
 }
 
 void autentification() {
