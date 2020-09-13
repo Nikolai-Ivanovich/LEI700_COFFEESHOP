@@ -9,8 +9,8 @@
 * Программно-аппаратный комплекс LEI700 поддерживает языки: Assembler, C, C++.     
 * PIN - специальный код из 4 цифр, предоставляемый EspressoBiancci представителям сервиса под роспись.
  
-1. Разделитесь по парам
-2. Договоритесь с напарником о времени митинга в скайпе  (1-2 раза в неделю) и явно запишите его
++ 1. Разделитесь по парам
+- 2. Договоритесь с напарником о времени митинга в скайпе  (1-2 раза в неделю) и явно запишите его
 2. Работая в паре, обсудите проект. Помните, что хороший код - надежный, продумайте, какие исключительные ситуации могут возникнуть при заказе кофе и работе сотрудников сервиса
 3. Критически важно на этом этапе задавать вопросы, иначе, по статистике, у вас есть 75% сделать работающий проект и услышать знаменитую фразу заказчика: "А я хотел не это"
 4. Разработайте UI системы (точный вид меню)
@@ -26,41 +26,67 @@
 using namespace std;
 
 #define PIN 1234
+#define MAXBALANCE 5000
 
+int initializationCoffeeMachine(double balance, int cups, int amountCoffee, int amountMilk, int amountWate, int amountSugar);
+void outputGreeting();
 void printMenu();
 void cookEspresso();
 void cookCappuccino();
 void cookLatte();
 void openServiceMenu(); 
 void autentification();
-int amtSugar();
-int numbOfSpoons();
+int howMuchSugarUse();
+int inputAmountSugar();
 
 int main()
 {
-    int choice = 0;
+    int userChoice = 0;
     double balance = 100.0;
     int cups = 50;
-    int amountCoffee = 1000; //gramme
-    int amountMilk = 1000;  //milliliters
-    int amountWater = 10000;    //milliliters
-    int amountSugar = 1000; //gramme
+    int amountCoffee = 1000;    // gramme
+    int amountMilk = 1000;      // milliliters
+    int amountWater = 10000;    // milliliters
+    int amountSugar = 1000;     // gramme
 
-    cout << "Hello! Please select coffee." << endl;
+    if (int result = initializationCoffeeMachine(balance, cups, amountCoffee, amountMilk, amountWater, amountSugar) != 0)
+        return result;
+
+    void outputGreeting();
 
     while (true) {
         printMenu();
-        cin >> choice;
-        if (choice == 1)
+        cin >> userChoice;
+        if (userChoice == 1)
             cookEspresso();
-        else if (choice == 2)
+        else if (userChoice == 2)
             cookCappuccino();
-        else if (choice == 3)
+        else if (userChoice == 3)
             cookLatte();
-        else if (choice == 4)
+        else if (userChoice == 4)
             autentification();
     }
     return 0;
+}
+
+int initializationCoffeeMachine(double balance, int cups, int amountCoffee, int amountMilk, int amountWate, int amountSugar) {
+    if (balance >= MAXBALANCE)
+        return 1;
+    else if (cups == 0)
+        return 2;
+    else if (amountCoffee == 0)
+        return 3;
+    else if (amountMilk == 0)
+        return 4;
+    else if (amountWate == 0)
+        return 5;
+    else if (amountSugar == 0)
+        return 6;
+    else return 0;
+}
+
+void outputGreeting() {
+    cout << "Welcome to the EspressoBiancci coffee machine." << endl;
 }
 
 void printMenu() {
@@ -97,16 +123,16 @@ void autentification() {
         cout << "Your PIN is not valid." << endl;
 }
 
-int amtSugar() {
+int howMuchSugarUse() {
     int sugar = 0;
     cout << "Do you want to add sugar? ";
     cin >> sugar;
     if (sugar > 0)
-        numbOfSpoons();
+        inputAmountSugar();
     return 0;
 }
 
-int numbOfSpoons() {
+int inputAmountSugar() {
     int spoons = 0;
     cout << "How much spoons of sugar do you want? ";
     cin >> spoons;
