@@ -30,11 +30,11 @@ using namespace std;
 
 int initializationCoffeeMachine(double balance, int cups, int amountCoffee, int amountMilk, int amountWate, int amountSugar);
 void outputGreeting();
-void printMenu();
+void printMainMenu();
 void cookEspresso();
 void cookCappuccino();
 void cookLatte();
-void openServiceMenu(); 
+void printServiceMenu();
 void autentification();
 int howMuchSugarUse();
 int inputAmountSugar();
@@ -55,7 +55,7 @@ int main()
     void outputGreeting();
 
     while (true) {
-        printMenu();
+        printMainMenu();
         cin >> userChoice;
         if (userChoice == 1)
             cookEspresso();
@@ -89,7 +89,7 @@ void outputGreeting() {
     cout << "Welcome to the EspressoBiancci coffee machine." << endl;
 }
 
-void printMenu() {
+void printMainMenu() {
     cout << endl << "1. Espresso" << endl;
     cout << "2. Cappuccino" << endl;
     cout << "3. Latte" << endl;
@@ -109,8 +109,14 @@ void cookLatte() {
     cout << "Cappuccino is ready" << endl;
 }
 
-void openServiceMenu() {
-    cout << "Service is open." << endl;
+void printServiceMenu() {
+    cout << endl << "Service menu LEI700" << endl;
+    cout << "1. Cash transactions" << endl;
+    cout << "2. View the amount of ingredients remaining" << endl;
+
+    cout << "5. Software version" << endl;
+
+    cout << "Your choice? ";
 }
 
 void autentification() {
@@ -118,7 +124,7 @@ void autentification() {
     cout << "Please, enter your PIN: ";
     cin >> pin;
     if (pin == PIN)
-        openServiceMenu();
+        printServiceMenu();
     else
         cout << "Your PIN is not valid." << endl;
 }
