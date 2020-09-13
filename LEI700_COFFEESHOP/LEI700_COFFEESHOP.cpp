@@ -114,4 +114,5 @@ int numbOfSpoons() {
         cout << "One spoon of sugar.";
     else if (spoons == 2)
         cout << "Two spoons of sugar.";
+ return 0;
 }
