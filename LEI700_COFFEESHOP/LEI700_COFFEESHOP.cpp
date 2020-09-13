@@ -41,8 +41,7 @@ int inputAmountSugar();
 
 void checkSugar();
 
-// все переменные стали глобальными
-int userChoice = 0;
+// некоторые переменные стали глобальными
 double balance = 100.0;
 int cups = 50;
 int amountCoffee = 1000;    // gramme
@@ -52,6 +51,8 @@ int amountSugar = 1000;     // gramme
 
 int main()
 {
+    int userChoice = 0;
+
     if (int result = initializationCoffeeMachine(balance, cups, amountCoffee, amountMilk, amountWater, amountSugar) != 0)
         return result;
     
@@ -102,7 +103,7 @@ void printMenu() {
 
 void cookEspresso() {
     howMuchSugarUse();
-    cout << "Espresso is ready." << endl;
+    cout << endl << "Espresso is ready." << endl;
     checkSugar();  // исключительно для проверки
 }
 
@@ -115,14 +116,7 @@ void cookLatte() {
 }
 
 void openServiceMenu() {
-    cout << endl << "Service menu LEI700" << endl;
-    cout << "1. Cash transactions" << endl;
-    cout << "2. View the amount of ingredients remaining" << endl;
-    cout << "3. Viewing the logs of the coffee machine" << endl;
-    cout << "4. Software version" << endl;
-    cout << "5. Shutdown coffee machine" << endl;
-
-    cout << "Your choice? ";
+    cout << "Service is open." << endl;
 }
 
 void autentification() {
