@@ -41,7 +41,7 @@ int inputAmountSugar();
 
 void checkSugar();
 
-// некоторые переменные стали глобальными
+// некоторые переменные стали глобальными для видимости функциям
 double balance = 100.0;
 int cups = 50;
 int amountCoffee = 1000;    // gramme
