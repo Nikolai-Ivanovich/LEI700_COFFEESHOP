@@ -36,12 +36,12 @@ void cookCappuccino();
 void cookLatte();
 void openServiceMenu();
 void autentification();
-int howMuchSugarUse();
-int inputAmountSugar();
+void howMuchSugarUse();
+void inputAmountSugar();
 
 void checkSugar();
 
-// некоторые переменные стали глобальными для видимости функциям
+// некоторые переменные стали глобальными
 double balance = 100.0;
 int cups = 50;
 int amountCoffee = 1000;    // gramme
@@ -53,6 +53,7 @@ int main()
 {
     int userChoice = 0;
 
+    // checking all ingredients are present and overflow balance
     if (int result = initializationCoffeeMachine(balance, cups, amountCoffee, amountMilk, amountWater, amountSugar) != 0)
         return result;
     
@@ -129,16 +130,15 @@ void autentification() {
         cout << "Your PIN is not valid." << endl;
 }
 
-int howMuchSugarUse() {
+void howMuchSugarUse() {
     int sugar = 0;
     cout << "Do you want to add sugar? [ NO 0 | YES 1 ]";
     cin >> sugar;
     if (sugar > 0)
         inputAmountSugar();
-    return 0;
 }
 
-int inputAmountSugar() {
+void inputAmountSugar() {
     int spoons = 0;
     cout << "How much spoons of sugar do you want? [ ONE SPOON 1 | TWO SPOONS 2 ]";
     cin >> spoons;
@@ -150,7 +150,6 @@ int inputAmountSugar() {
         cout << "Two spoons of sugar.";
         amountSugar -= 10;
     }
-    return 0;
 }
 
 void checkSugar() {         //глобальная переменная хранит остаток
