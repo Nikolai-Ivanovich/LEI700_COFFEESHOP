@@ -24,6 +24,7 @@ COFFEESHOP. Компания EspressoBiancci заказывает разрабо
 
 #include <iostream>
 using namespace std;
+#include "ServiceMenu.h"
 
 #define PIN 1234
 #define MAXBALANCE 5000
@@ -34,7 +35,6 @@ void printMenu();
 void cookEspresso();
 void cookCappuccino();
 void cookLatte();
-void openServiceMenu();
 void autentification();
 void howMuchSugarUse();
 void inputAmountSugar();
@@ -114,15 +114,6 @@ void cookCappuccino() {
 
 void cookLatte() {
     cout << "Cappuccino is ready" << endl;
-}
-
-void openServiceMenu() {
-    cout << endl << "Service menu LEI700" << endl;
-    cout << "1. Cash transactions" << endl;
-    cout << "2. View the amount of ingredients remaining" << endl;
-    cout << "3. Viewing the logs of the coffee machine" << endl;
-    cout << "4. Software version" << endl;
-    cout << "5. Shutdown coffee machine" << endl;
 }
 
 void autentification() {
