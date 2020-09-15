@@ -140,10 +140,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="LEI700_COFFEESHOP.cpp" />
-    <ClCompile Include="ServiceMenu.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ServiceMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
