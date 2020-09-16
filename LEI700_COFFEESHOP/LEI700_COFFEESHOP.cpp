@@ -90,6 +90,7 @@ void showSuccessfulMessage(string message);
 void changeColour(int colour);
 void printTitle();
 void printFooter();
+int checkInputUser(char data, int start, int end);
 
 int main()
 {
@@ -104,9 +105,6 @@ int main()
     // The second number - count cups
     // The 3  number - authentication attempts
     serviceData balanceAndCups = { 6.0, 7, 0 };
-    //balanceAndCups.balance = 6;
-    //balanceAndCups.cups = 7;
-    //balanceAndCups.auAttempts = 0;
 
     int userChoice = 0;
 
@@ -119,6 +117,9 @@ int main()
     while (true) {
         printMenu(balanceAndCups);
         cin >> userChoice;
+        if (checkInputUser(userChoice, 1, 3) != 0) {
+            continue;
+        }
         if (userChoice == 1)
             putBalanceMoney(balanceAndCups);
         else if (userChoice == 2)
@@ -414,4 +415,13 @@ void changeColour(int colour) {
 void setColorConsole(int colorText, int background) {
     HANDLE hConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsoleHandle, colorText | background);
+}
+
+int checkInputUser(char data, int start, int end) {
+    if ((int)data <= start or (int)data >= end) {
+        clearDisplay();
+        showErrorMessage("Error!");
+        return 1;
+    }
+    return 0;
 }
