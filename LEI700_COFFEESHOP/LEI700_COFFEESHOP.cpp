@@ -59,30 +59,30 @@ struct serviceData {
     int auAttempts;
 };
 
-int initializationCoffeeMachine(serviceData balanceAndCups);
+int initializationCoffeeMachine(serviceData &balanceAndCups);
 void outputGreeting();
-void printCountBalansAndCups(serviceData balanceAndCups);
-void printMenu(serviceData balanceAndCups);
+void printCountBalansAndCups(serviceData &balanceAndCups);
+void printMenu(serviceData &balanceAndCups);
 
-int putBalanceMoney(serviceData balanceAndCups);
+int putBalanceMoney(serviceData &balanceAndCups);
 
-void printMenuCoffee(serviceData balanceAndCups);
-bool isCupsExist(serviceData balanceAndCups);
-void selectCoffee(serviceData balanceAndCups);
-int cookCoffee(serviceData balanceAndCups, string nameCoffee, double price);
-int checkConditionsMakingCoffee(serviceData balanceAndCups, double price);
-bool isEnoughMoney(serviceData balanceAndCups, double price);
-bool isEnoughCups(serviceData balanceAndCups);
+void printMenuCoffee(serviceData &balanceAndCups);
+bool isCupsExist(serviceData &balanceAndCups);
+void selectCoffee(serviceData &balanceAndCups);
+int cookCoffee(serviceData &balanceAndCups, string nameCoffee, double price);
+int checkConditionsMakingCoffee(serviceData &balanceAndCups, double price);
+bool isEnoughMoney(serviceData &balanceAndCups, double price);
+bool isEnoughCups(serviceData &balanceAndCups);
 void showProcesCookCoffee(string nameCoffee);
 
-int selectServiceMenu(serviceData balanceAndCups);
-void printServiceMenu(serviceData balanceAndCups);
-void showСurrentBalance(serviceData balanceAndCups);
-void showNumberCupsRemaining(serviceData balanceAndCups);
-void takeMoney(serviceData balanceAndCups);
+int selectServiceMenu(serviceData &balanceAndCups);
+void printServiceMenu(serviceData &balanceAndCups);
+void showСurrentBalance(serviceData &balanceAndCups);
+void showNumberCupsRemaining(serviceData &balanceAndCups);
+void takeMoney(serviceData &balanceAndCups);
 
 void clearDisplay();
-bool autentification(serviceData balanceAndCups);
+bool autentification(serviceData &balanceAndCups);
 void setColorConsole(int colorText, int background);
 void showErrorMessage(string message);
 void showSuccessfulMessage(string message);
@@ -90,9 +90,6 @@ void showSuccessfulMessage(string message);
 void changeColour(int colour);
 void printTitle();
 void printFooter();
-
-
-
 
 int main()
 {
@@ -132,7 +129,7 @@ int main()
     return 0;
 }
 
-int initializationCoffeeMachine(serviceData balanceAndCups) {
+int initializationCoffeeMachine(serviceData &balanceAndCups) {
     if (balanceAndCups.balance >= MAXBALANCE) {                     
         showErrorMessage("Error! The coffee machine cannot accept money.");
         return 1;
@@ -157,7 +154,7 @@ void outputGreeting() {
     changeColour(15);
 }
 
-void printMenu(serviceData balanceAndCups) {
+void printMenu(serviceData &balanceAndCups) {
     printTitle();
     printCountBalansAndCups(balanceAndCups);
 
@@ -185,14 +182,14 @@ void printFooter() {  // пока что не используется
     changeColour(11); cout << endl << "UI developed by the team N.Gusak & R.Kaznouski. All rights reserved."; changeColour(15);
 }
 
-void printCountBalansAndCups(serviceData balanceAndCups) {
+void printCountBalansAndCups(serviceData &balanceAndCups) {
     changeColour(11);
     cout << endl << "Balance: " << balanceAndCups.balance << " BYN" << endl;
     cout << "Cups: " << balanceAndCups.cups << endl;
     changeColour(15);
 }
 
-int putBalanceMoney(serviceData balanceAndCups) {
+int putBalanceMoney(serviceData &balanceAndCups) {
     clearDisplay();
 
     if (isCupsExist(balanceAndCups) == false) {
@@ -217,7 +214,7 @@ void clearDisplay() {
     system("cls");
 }
 
-bool isCupsExist(serviceData balanceAndCups) {
+bool isCupsExist(serviceData &balanceAndCups) {
     if (balanceAndCups.cups > 0)
         return true;
     else
@@ -237,7 +234,7 @@ void showErrorMessage(string message) {
     setColorConsole(15, 0);
 }
 
-void selectCoffee(serviceData balanceAndCups) {
+void selectCoffee(serviceData &balanceAndCups) {
     clearDisplay();
     printTitle();
     int userChoice = 0;
@@ -264,7 +261,7 @@ void selectCoffee(serviceData balanceAndCups) {
 }
 
 
-void printMenuCoffee(serviceData balanceAndCups) {
+void printMenuCoffee(serviceData &balanceAndCups) {
     printCountBalansAndCups(balanceAndCups);
     
     cout << endl << "What do you prefer?";
@@ -286,7 +283,7 @@ void printMenuCoffee(serviceData balanceAndCups) {
     cout << "Your choice? " << endl;
 }
 
-int cookCoffee(serviceData balanceAndCups, string nameCoffee, double price) {
+int cookCoffee(serviceData &balanceAndCups, string nameCoffee, double price) {
     showProcesCookCoffee(nameCoffee);
 
     if (int result = checkConditionsMakingCoffee(balanceAndCups, price) != 0)
@@ -304,7 +301,7 @@ void showProcesCookCoffee(string nameCoffee) {
 
 }
 
-int checkConditionsMakingCoffee(serviceData balanceAndCups, double price) {
+int checkConditionsMakingCoffee(serviceData &balanceAndCups, double price) {
     if (isEnoughMoney(balanceAndCups, price) == false) {
         showErrorMessage("Error! Not enough money to order.");
         return 1;
@@ -316,19 +313,19 @@ int checkConditionsMakingCoffee(serviceData balanceAndCups, double price) {
     return 0;
 }
 
-bool isEnoughMoney(serviceData balanceAndCups, double price) {
+bool isEnoughMoney(serviceData &balanceAndCups, double price) {
     if (balanceAndCups.balance < price)
         return false;
     return true;
 }
 
-bool isEnoughCups(serviceData balanceAndCups) {
+bool isEnoughCups(serviceData &balanceAndCups) {
     if (balanceAndCups.cups == 0)
         return false;
     return true;
 }
 
-int selectServiceMenu(serviceData balanceAndCups) {
+int selectServiceMenu(serviceData &balanceAndCups) {
     if (autentification(balanceAndCups) == false) {
         return 1;
     }
@@ -363,7 +360,7 @@ int selectServiceMenu(serviceData balanceAndCups) {
     return 0;
 }
 
-bool autentification(serviceData balanceAndCups) {
+bool autentification(serviceData &balanceAndCups) {
     clearDisplay();
     if (balanceAndCups.auAttempts > 2) {
         showErrorMessage("The coffee machine is locked!");
@@ -381,7 +378,7 @@ bool autentification(serviceData balanceAndCups) {
     return false;
 }
 
-void printServiceMenu(serviceData balanceAndCups) {
+void printServiceMenu(serviceData &balanceAndCups) {
     cout << endl << "To check funds in the bill acceptor, click [ 1 ] " <<
         endl << "To check the number of cups, click [ 2 ] " <<
         endl << "For withdrawing funds from the bill acceptor, click [ 3 ] " <<
@@ -396,15 +393,15 @@ void printServiceMenu(serviceData balanceAndCups) {
     cout << "Your choice? ";
 }
 
-void showСurrentBalance(serviceData balanceAndCups) {
+void showСurrentBalance(serviceData &balanceAndCups) {
     cout << endl << "Balance: " << balanceAndCups.balance << endl;
 }
 
-void showNumberCupsRemaining(serviceData balanceAndCups) {
+void showNumberCupsRemaining(serviceData &balanceAndCups) {
     cout << endl << "Cups remaining: " << balanceAndCups.cups << endl;
 }
 
-void takeMoney(serviceData balanceAndCups) {
+void takeMoney(serviceData &balanceAndCups) {
     cout << endl << "Take money in the amount of: " << balanceAndCups.balance << " BYN." << endl;
     balanceAndCups.balance = 0;
 }
