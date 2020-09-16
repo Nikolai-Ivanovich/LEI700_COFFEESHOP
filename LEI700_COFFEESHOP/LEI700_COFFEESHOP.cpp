@@ -52,30 +52,37 @@ using namespace std;
 #define PRICECAPUTHINO 2.5
 #define PRICELATTE 3.0
 
-int initializationCoffeeMachine(double balanceAndCups[]);
+
+struct serviceData {
+    double balance;
+    int cups;
+    int auAttempts;
+};
+
+int initializationCoffeeMachine(serviceData balanceAndCups);
 void outputGreeting();
-void printCountBalansAndCups(double balanceAndCups[]);
-void printMenu(double balanceAndCups[]);
+void printCountBalansAndCups(serviceData balanceAndCups);
+void printMenu(serviceData balanceAndCups);
 
-int putBalanceMoney(double balanceAndCups[]);
+int putBalanceMoney(serviceData balanceAndCups);
 
-void printMenuCoffee(double balanceAndCups[]);
-bool isCupsExist(double balanceAndCups[]);
-void selectCoffee(double balanceAndCups[]);
-int cookCoffee(double balanceAndCups[], string nameCoffee, double price);
-int checkСonditionsMakingCoffee(double balanceAndCups[], double price);
-bool isEnoughMoney(double balanceAndCups[], double price);
-bool isEnoughCups(double balanceAndCups[]);
+void printMenuCoffee(serviceData balanceAndCups);
+bool isCupsExist(serviceData balanceAndCups);
+void selectCoffee(serviceData balanceAndCups);
+int cookCoffee(serviceData balanceAndCups, string nameCoffee, double price);
+int checkConditionsMakingCoffee(serviceData balanceAndCups, double price);
+bool isEnoughMoney(serviceData balanceAndCups, double price);
+bool isEnoughCups(serviceData balanceAndCups);
 void showProcesCookCoffee(string nameCoffee);
 
-int selectServiceMenu(double balanceAndCups[]);
-void printServiceMenu(double balanceAndCups[]);
-void showСurrentBalance(double balanceAndCups[]);
-void showNumberCupsRemaining(double balanceAndCups[]);
-void takeMoney(double balanceAndCups[]);
+int selectServiceMenu(serviceData balanceAndCups);
+void printServiceMenu(serviceData balanceAndCups);
+void showСurrentBalance(serviceData balanceAndCups);
+void showNumberCupsRemaining(serviceData balanceAndCups);
+void takeMoney(serviceData balanceAndCups);
 
 void clearDisplay();
-bool autentification(double balanceAndCups[]);
+bool autentification(serviceData balanceAndCups);
 void setColorConsole(int colorText, int background);
 void showErrorMessage(string message);
 void showSuccessfulMessage(string message);
@@ -83,6 +90,9 @@ void showSuccessfulMessage(string message);
 void changeColour(int colour);
 void printTitle();
 void printFooter();
+
+
+
 
 int main()
 {
@@ -95,8 +105,12 @@ int main()
 
     // The first number - balance
     // The second number - count cups
-    // The 3  number number - authentication attempts
-    double balanceAndCups[] = { 6.0, 7.0 , 0.0 };
+    // The 3  number - authentication attempts
+    serviceData balanceAndCups = { 6.0, 7, 0 };
+    //balanceAndCups.balance = 6;
+    //balanceAndCups.cups = 7;
+    //balanceAndCups.auAttempts = 0;
+
     int userChoice = 0;
 
     // Checking all ingredients are present and overflow balance
@@ -118,12 +132,17 @@ int main()
     return 0;
 }
 
-int initializationCoffeeMachine(double balanceAndCups[]) {
-    if (balanceAndCups[0] >= MAXBALANCE) {                     
+int initializationCoffeeMachine(serviceData balanceAndCups) {
+    if (balanceAndCups.balance >= MAXBALANCE) {                     
         showErrorMessage("Error! The coffee machine cannot accept money.");
         return 1;
     }
-    else if (balanceAndCups[1] == 0) {
+    else if (balanceAndCups.cups == 0) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="balanceAndCups"></param>
+        /// <returns></returns>
         showErrorMessage("Error! The coffee machine cannot accept money.");
         return 2;
     }
@@ -138,13 +157,13 @@ void outputGreeting() {
     changeColour(15);
 }
 
-void printMenu(double balanceAndCups[]) {
+void printMenu(serviceData balanceAndCups) {
     printTitle();
     printCountBalansAndCups(balanceAndCups);
 
     changeColour(2); cout << endl << "[ ==> USER'S GUIDE: <== ]"; 
     changeColour(15); cout << endl << "To get our great coffee, select "; changeColour(2); cout << "[ 1 ]"; changeColour(15); cout << " and deposit the required amount.";
-    changeColour(4); cout << endl << "PLEASE NOTE that the device DOES NOT RETURN CHANGE!";
+    changeColour(12); cout << endl << "PLEASE NOTE that the device DOES NOT RETURN CHANGE!";
     changeColour(15); cout << endl << "Then press "; changeColour(2); cout << "[ 2 ]"; changeColour(15); cout << " to select the type of coffee.";
     changeColour(15); cout << endl << "For service, press "; changeColour(2); cout << "[ 3 ]" << endl; 
     changeColour(2); cout << endl << "[ 1 ]"; changeColour(15); cout << " Put money." << endl;
@@ -157,7 +176,7 @@ void printTitle() {
     changeColour(14);
     cout << "[= = = = = = = = = = = = = = = =]" << endl;
     cout << "[ * * * ESPRESSO BIANCCI  * * * ]" << endl;
-    cout << "[ * TASTE * AROMA * PLEASURE * ]" << endl;
+    cout << "[  * TASTE * AROMA * PLEASURE * ]" << endl;
     cout << "[= = = = = = = = = = = = = = = =]" << endl;
     changeColour(15);
 }
@@ -166,14 +185,14 @@ void printFooter() {  // пока что не используется
     changeColour(11); cout << endl << "UI developed by the team N.Gusak & R.Kaznouski. All rights reserved."; changeColour(15);
 }
 
-void printCountBalansAndCups(double balanceAndCups[]) {
+void printCountBalansAndCups(serviceData balanceAndCups) {
     changeColour(11);
-    cout << endl << "Balance: " << balanceAndCups[0] << " BYN" << endl;
-    cout << "Cups: " << balanceAndCups[1] << endl;
+    cout << endl << "Balance: " << balanceAndCups.balance << " BYN" << endl;
+    cout << "Cups: " << balanceAndCups.cups << endl;
     changeColour(15);
 }
 
-int putBalanceMoney(double balanceAndCups[]) {
+int putBalanceMoney(serviceData balanceAndCups) {
     clearDisplay();
 
     if (isCupsExist(balanceAndCups) == false) {
@@ -183,7 +202,7 @@ int putBalanceMoney(double balanceAndCups[]) {
     cout << "Put money: ";
     cin >> changeBalanc;
     if (changeBalanc <= 100.0) {
-        balanceAndCups[0] += changeBalanc;
+        balanceAndCups.balance += changeBalanc;
         clearDisplay();
         showSuccessfulMessage(to_string(changeBalanc) + " BYN has been successfully credited to your account.");
         return 0;
@@ -198,8 +217,8 @@ void clearDisplay() {
     system("cls");
 }
 
-bool isCupsExist(double balanceAndCups[]) {
-    if (balanceAndCups[1] > 0)
+bool isCupsExist(serviceData balanceAndCups) {
+    if (balanceAndCups.cups > 0)
         return true;
     else
         showErrorMessage("Error! Sorry, we cannot accept money and fulfill your order because the cups have run out.");
@@ -218,7 +237,7 @@ void showErrorMessage(string message) {
     setColorConsole(15, 0);
 }
 
-void selectCoffee(double balanceAndCups[]) {
+void selectCoffee(serviceData balanceAndCups) {
     clearDisplay();
     printTitle();
     int userChoice = 0;
@@ -245,7 +264,7 @@ void selectCoffee(double balanceAndCups[]) {
 }
 
 
-void printMenuCoffee(double balanceAndCups[]) {
+void printMenuCoffee(serviceData balanceAndCups) {
     printCountBalansAndCups(balanceAndCups);
     
     cout << endl << "What do you prefer?";
@@ -267,17 +286,17 @@ void printMenuCoffee(double balanceAndCups[]) {
     cout << "Your choice? " << endl;
 }
 
-int cookCoffee(double balanceAndCups[], string nameCoffee, double price) {
+int cookCoffee(serviceData balanceAndCups, string nameCoffee, double price) {
     showProcesCookCoffee(nameCoffee);
 
-    if (int result = checkСonditionsMakingCoffee(balanceAndCups, price) != 0)
+    if (int result = checkConditionsMakingCoffee(balanceAndCups, price) != 0)
         return result;
 
     showProcesCookCoffee(nameCoffee);
 
     showSuccessfulMessage(nameCoffee + " is ready.");
-    balanceAndCups[0] = balanceAndCups[0] - price;
-    balanceAndCups[1] = balanceAndCups[1] - 1;
+    balanceAndCups.balance = balanceAndCups.balance - price;
+    balanceAndCups.cups = balanceAndCups.cups - 1;
     return 0;
 }
 
@@ -285,7 +304,7 @@ void showProcesCookCoffee(string nameCoffee) {
 
 }
 
-int checkСonditionsMakingCoffee(double balanceAndCups[], double price) {
+int checkConditionsMakingCoffee(serviceData balanceAndCups, double price) {
     if (isEnoughMoney(balanceAndCups, price) == false) {
         showErrorMessage("Error! Not enough money to order.");
         return 1;
@@ -297,19 +316,19 @@ int checkСonditionsMakingCoffee(double balanceAndCups[], double price) {
     return 0;
 }
 
-bool isEnoughMoney(double balanceAndCups[], double price) {
-    if (balanceAndCups[0] < price)
+bool isEnoughMoney(serviceData balanceAndCups, double price) {
+    if (balanceAndCups.balance < price)
         return false;
     return true;
 }
 
-bool isEnoughCups(double balanceAndCups[]) {
-    if (balanceAndCups[1] == 0)
+bool isEnoughCups(serviceData balanceAndCups) {
+    if (balanceAndCups.cups == 0)
         return false;
     return true;
 }
 
-int selectServiceMenu(double balanceAndCups[]) {
+int selectServiceMenu(serviceData balanceAndCups) {
     if (autentification(balanceAndCups) == false) {
         return 1;
     }
@@ -344,9 +363,9 @@ int selectServiceMenu(double balanceAndCups[]) {
     return 0;
 }
 
-bool autentification(double balanceAndCups[]) {
+bool autentification(serviceData balanceAndCups) {
     clearDisplay();
-    if (balanceAndCups[2] > 2) {
+    if (balanceAndCups.auAttempts > 2) {
         showErrorMessage("The coffee machine is locked!");
         return false;
     }
@@ -356,13 +375,13 @@ bool autentification(double balanceAndCups[]) {
     if (pin == PIN)
         return true;
     else {
-        balanceAndCups[2]++;
+        balanceAndCups.auAttempts++;
         showErrorMessage("Error! Your PIN is not valid.");
     }
     return false;
 }
 
-void printServiceMenu(double balanceAndCups[]) {
+void printServiceMenu(serviceData balanceAndCups) {
     cout << endl << "To check funds in the bill acceptor, click [ 1 ] " <<
         endl << "To check the number of cups, click [ 2 ] " <<
         endl << "For withdrawing funds from the bill acceptor, click [ 3 ] " <<
@@ -377,17 +396,17 @@ void printServiceMenu(double balanceAndCups[]) {
     cout << "Your choice? ";
 }
 
-void showСurrentBalance(double balanceAndCups[]) {
-    cout << endl << "Balance: " << balanceAndCups[0] << endl;
+void showСurrentBalance(serviceData balanceAndCups) {
+    cout << endl << "Balance: " << balanceAndCups.balance << endl;
 }
 
-void showNumberCupsRemaining(double balanceAndCups[]) {
-    cout << endl << "Cups remaining: " << balanceAndCups[1] << endl;
+void showNumberCupsRemaining(serviceData balanceAndCups) {
+    cout << endl << "Cups remaining: " << balanceAndCups.cups << endl;
 }
 
-void takeMoney(double balanceAndCups[]) {
-    cout << endl << "Take money in the amount of: " << balanceAndCups[0] << " BYN." << endl;
-    balanceAndCups[0] = 0;
+void takeMoney(serviceData balanceAndCups) {
+    cout << endl << "Take money in the amount of: " << balanceAndCups.balance << " BYN." << endl;
+    balanceAndCups.balance = 0;
 }
 
 void changeColour(int colour) {
