@@ -59,30 +59,30 @@ struct serviceData {
     int auAttempts;
 };
 
-int initializationCoffeeMachine(serviceData &balanceAndCups);
+int initializationCoffeeMachine(serviceData &variableValues);
 void outputGreeting();
-void printCountBalansAndCups(serviceData &balanceAndCups);
-void printMenu(serviceData &balanceAndCups);
+void printCountBalansAndCups(serviceData &variableValues);
+void printMenu(serviceData &variableValues);
 
-int putBalanceMoney(serviceData &balanceAndCups);
+int putBalanceMoney(serviceData &variableValues);
 
-void printMenuCoffee(serviceData &balanceAndCups);
-bool isCupsExist(serviceData &balanceAndCups);
-void selectCoffee(serviceData &balanceAndCups);
-int cookCoffee(serviceData &balanceAndCups, string nameCoffee, double price);
-int checkConditionsMakingCoffee(serviceData &balanceAndCups, double price);
-bool isEnoughMoney(serviceData &balanceAndCups, double price);
-bool isEnoughCups(serviceData &balanceAndCups);
+void printMenuCoffee(serviceData &variableValues);
+bool isCupsExist(serviceData &variableValues);
+void selectCoffee(serviceData &variableValues);
+int cookCoffee(serviceData &variableValues, string nameCoffee, double price);
+int checkConditionsMakingCoffee(serviceData &variableValues, double price);
+bool isEnoughMoney(serviceData &variableValues, double price);
+bool isEnoughCups(serviceData &variableValues);
 void showProcessCookCoffee(string nameCoffee);
 
-int selectServiceMenu(serviceData &balanceAndCups);
-void printServiceMenu(serviceData &balanceAndCups);
-void showСurrentBalance(serviceData &balanceAndCups);
-void showNumberCupsRemaining(serviceData &balanceAndCups);
-void takeMoney(serviceData &balanceAndCups);
+int selectServiceMenu(serviceData &variableValues);
+void printServiceMenu(serviceData &variableValues);
+void showСurrentBalance(serviceData &variableValues);
+void showNumberCupsRemaining(serviceData &variableValues);
+void takeMoney(serviceData &variableValues);
 
 void clearDisplay();
-int autentification(serviceData &balanceAndCups);
+int autentification(serviceData &variableValues);
 void setColorConsole(int colorText, int background);
 void showErrorMessage(string message);
 void showSuccessfulMessage(string message);
@@ -90,12 +90,11 @@ void showSuccessfulMessage(string message);
 void changeColour(int colour);
 void printTitle();
 void printFooter();
-int checkIntInputUserNumber(int data, int start, int end);
-double checkDoubleInputUserNumber(double data, double startLimit, double endLimit);
 int inputUserIntNumber(int value);
+int checkIntInputUserNumber(int data, int start, int end);
 double inputUserDoubleNumber(double value);
+double checkDoubleInputUserNumber(double data, double startLimit, double endLimit);
 void blockCoffeeMachine();
-
 
 int main()
 {
@@ -139,18 +138,17 @@ int main()
     return 0;
 }
 
-int initializationCoffeeMachine(serviceData &balanceAndCups) {
-    if (balanceAndCups.balance >= MAXBALANCE) {                     
+int initializationCoffeeMachine(serviceData &variableValues) {
+    if (variableValues.balance >= MAXBALANCE) {                     
         showErrorMessage("Error! The coffee machine cannot accept money.");
         return 1;
     }
-    else if (balanceAndCups.cups == 0) {
+    else if (variableValues.cups == 0) {
         showErrorMessage("Error! The coffee machine has run out of cups.");
         return 2;
     }
     return 0;
 }
-
 
 // УБИРАЕМ?
 void outputGreeting() {
@@ -161,15 +159,12 @@ void outputGreeting() {
     changeColour(15);
 }
 
-void printMenu(serviceData &balanceAndCups) {
+void printMenu(serviceData &variableValues) {
     printTitle();
-    printCountBalansAndCups(balanceAndCups);
+    printCountBalansAndCups(variableValues);
 
     changeColour(2); cout << endl << "[ ==> USER'S GUIDE: <== ]"; 
     changeColour(15); cout << endl << "To get our great coffee, select "; changeColour(2); cout << "[ 1 ]"; changeColour(15); cout << " and deposit the required amount.";
-    
-    // Это я добавил, оформи это красиво)
-    cout << endl << "Maximum amount 100 BYN!";
     changeColour(12); cout << endl << "PLEASE NOTE that the device DOES NOT RETURN CHANGE!";
     changeColour(15); cout << endl << "Then press "; changeColour(2); cout << "[ 2 ]"; changeColour(15); cout << " to select the type of coffee.";
     changeColour(15); cout << endl << "For service, press "; changeColour(2); cout << "[ 3 ]" << endl; 
@@ -188,30 +183,46 @@ void printTitle() {
     changeColour(15);
 }
 
+// Нежалательно записывать такие несколько команд в одной строке, нужно разбивать с новой строки после каждой точки с запятой
+// Мне кажется лучше оформить на примере функции showErrorMessage() во всей программе
+// Так код будет симпатичнее
+/*
+    Вместо строки- changeColour(11); cout << endl << "UI developed by the team N.Gusak & R.Kaznouski. All rights reserved."; changeColour(15);
+
+    Пишем и используем функцию:
+    void showMessageGreanColor(string text) {
+        changeColour(11);
+        cout << endl << "UI developed by the team N.Gusak & R.Kaznouski. All rights reserved.";
+        changeColour(15);
+    }
+
+    А в вызове:
+    showMessageGreanColor("UI developed by the team N.Gusak & R.Kaznouski. All rights reserved.");
+*/
 void printFooter() {  // пока что не используется
     changeColour(11); cout << endl << "UI developed by the team N.Gusak & R.Kaznouski. All rights reserved."; changeColour(15);
 }
 
-void printCountBalansAndCups(serviceData &balanceAndCups) {
+void printCountBalansAndCups(serviceData &variableValues) {
     changeColour(11);
-    cout << "Cups: " << balanceAndCups.cups;
-    if (balanceAndCups.balance < 10) {
+    cout << "Cups: " << variableValues.cups;
+    if (variableValues.balance < 10) {
         cout << "         ";
     }
-    else if (balanceAndCups.balance > 10 and balanceAndCups.balance < 100) {
+    else if (variableValues.balance > 10 and variableValues.balance < 100) {
         cout << "        ";
     }
-    else if (balanceAndCups.balance > 100) {
+    else if (variableValues.balance > 100) {
         cout << "       ";
     }
-    cout << "Balance: " << balanceAndCups.balance << " BYN" << endl;
+    cout << "Balance: " << variableValues.balance << " BYN" << endl;
     changeColour(15);
 }
 
-int putBalanceMoney(serviceData &balanceAndCups) {
+int putBalanceMoney(serviceData &variableValues) {
     clearDisplay();    
 
-    if (isCupsExist(balanceAndCups) == false) {
+    if (isCupsExist(variableValues) == false) {
         return 1;
     }
     
@@ -220,11 +231,11 @@ int putBalanceMoney(serviceData &balanceAndCups) {
     changeBalanc = inputUserDoubleNumber(changeBalanc);
 
     if (checkDoubleInputUserNumber(changeBalanc, 0.01, 100.0) != 0) {
-        //showErrorMessage("Error! You have entered incorrect data. The coffee machine accepts notes no more than 100 BYN");
+        showErrorMessage("The coffee machine accepts notes no more than 100 BYN");
         return 2;
     }
     else {
-        balanceAndCups.balance += changeBalanc;
+        variableValues.balance += changeBalanc;
         clearDisplay();
         
         changeColour(10);
@@ -232,23 +243,14 @@ int putBalanceMoney(serviceData &balanceAndCups) {
         changeColour(15);
         return 0;
     }
-
-  /*  cin >> changeBalanc;
-    if (changeBalanc <= 100.0) {
-        
-    }
-    else {
-        showErrorMessage("Error! The coffee machine accepts notes no more than 100 BYN.");
-        return 2;
-    }*/
 }
 
 void clearDisplay() {
     system("cls");
 }
 
-bool isCupsExist(serviceData &balanceAndCups) {
-    if (balanceAndCups.cups > 0)
+bool isCupsExist(serviceData &variableValues) {
+    if (variableValues.cups > 0)
         return true;
     else
         showErrorMessage("Error! Sorry, we cannot accept money and fulfill your order because the cups have run out.");
@@ -267,40 +269,34 @@ void showErrorMessage(string message) {
     setColorConsole(15, 0);
 }
 
-void selectCoffee(serviceData &balanceAndCups) {
+void selectCoffee(serviceData &variableValues) {
     clearDisplay();
     printTitle();
     int userChoice = 0;
+
     while (true) {
-        printMenuCoffee(balanceAndCups); 
+        printMenuCoffee(variableValues); 
 
         userChoice = inputUserIntNumber(userChoice);
         if (checkIntInputUserNumber(userChoice, 1, 4) != 0) {
             continue;
         }
 
-        if (userChoice == 1) {
-            clearDisplay();
-            cookCoffee(balanceAndCups, "Expresso", PRICEEXPRESSO);
-        }
-        else if (userChoice == 2) {
-            clearDisplay();
-            cookCoffee(balanceAndCups, "Cappuccino", PRICECAPUTHINO);
-        }
-        else if (userChoice == 3) {
-            clearDisplay();
-            cookCoffee(balanceAndCups, "Latte", PRICELATTE);
-        }
+        if (userChoice == 1) 
+            cookCoffee(variableValues, "Expresso", PRICEEXPRESSO);
+        else if (userChoice == 2)
+            cookCoffee(variableValues, "Cappuccino", PRICECAPUTHINO);
+        else if (userChoice == 3)
+            cookCoffee(variableValues, "Latte", PRICELATTE);
         else if (userChoice == 4) {
-            clearDisplay();
             break;
         }
     }
+    clearDisplay();
 }
 
-
-void printMenuCoffee(serviceData &balanceAndCups) {
-    printCountBalansAndCups(balanceAndCups);
+void printMenuCoffee(serviceData &variableValues) {
+    printCountBalansAndCups(variableValues);
     
     cout << endl << "What do you prefer?";
     changeColour(2); cout << endl << "[ 1 ]"; changeColour(15); cout << " If you have a momentary need for caffeine, try our espresso." <<
@@ -321,17 +317,18 @@ void printMenuCoffee(serviceData &balanceAndCups) {
     cout << "Your choice? " << endl;
 }
 
-int cookCoffee(serviceData &balanceAndCups, string nameCoffee, double price) {
-    //showProcessCookCoffee(nameCoffee);
+int cookCoffee(serviceData &variableValues, string nameCoffee, double price) {
+    clearDisplay();
 
-    if (int result = checkConditionsMakingCoffee(balanceAndCups, price) != 0)
+    if (int result = checkConditionsMakingCoffee(variableValues, price) != 0)
         return result;
 
     showProcessCookCoffee(nameCoffee);
 
+    // Здесь можно написать красивше, мол ваше кофе готово - возьмите его
     showSuccessfulMessage(nameCoffee + " is ready.");
-    balanceAndCups.balance = balanceAndCups.balance - price;
-    balanceAndCups.cups = balanceAndCups.cups - 1;
+    variableValues.balance = variableValues.balance - price;
+    variableValues.cups = variableValues.cups - 1;
     return 0;
 }
 
@@ -356,32 +353,32 @@ void showProcessCookCoffee(string nameCoffee) {
     clearDisplay();
 }
 
-int checkConditionsMakingCoffee(serviceData &balanceAndCups, double price) {
-    if (isEnoughMoney(balanceAndCups, price) == false) {
+int checkConditionsMakingCoffee(serviceData &variableValues, double price) {
+    if (isEnoughMoney(variableValues, price) == false) {
         showErrorMessage("Error! Not enough money to order.");
         return 1;
     }
-    if (isEnoughCups(balanceAndCups) == false) {
+    if (isEnoughCups(variableValues) == false) {
         showErrorMessage("Error! We cannot fulfill your order because we ran out of cups.");
         return 2;
     }
     return 0;
 }
 
-bool isEnoughMoney(serviceData &balanceAndCups, double price) {
-    if (balanceAndCups.balance < price)
+bool isEnoughMoney(serviceData &variableValues, double price) {
+    if (variableValues.balance < price)
         return false;
     return true;
 }
 
-bool isEnoughCups(serviceData &balanceAndCups) {
-    if (balanceAndCups.cups == 0)
+bool isEnoughCups(serviceData &variableValues) {
+    if (variableValues.cups == 0)
         return false;
     return true;
 }
 
-int selectServiceMenu(serviceData &balanceAndCups) {
-    int resultAu = autentification(balanceAndCups);
+int selectServiceMenu(serviceData &variableValues) {
+    int resultAu = autentification(variableValues);
     if (resultAu != 0) {
         return resultAu;
     }
@@ -390,38 +387,31 @@ int selectServiceMenu(serviceData &balanceAndCups) {
 
     int userChoice = 0;
     while (true) {
-        printServiceMenu(balanceAndCups);
+        printServiceMenu(variableValues);
 
         userChoice = inputUserIntNumber(userChoice);
         if (checkIntInputUserNumber(userChoice, 1, 5) != 0) {
             continue;
         }
 
-        if (userChoice == 1) {
-            clearDisplay();
-            showСurrentBalance(balanceAndCups);
-        }
-        else if (userChoice == 2) {
-            clearDisplay();
-            showNumberCupsRemaining(balanceAndCups);
-        }
-        else if (userChoice == 3) {
-            clearDisplay();
-            takeMoney(balanceAndCups);
-        }
+        if (userChoice == 1)
+            showСurrentBalance(variableValues);
+        else if (userChoice == 2)
+            showNumberCupsRemaining(variableValues);
+        else if (userChoice == 3)
+            takeMoney(variableValues);
         else if (userChoice == 4) {
             clearDisplay();
             exit(0);
         }
-        else if (userChoice == 5) {
-            clearDisplay();
+        else if (userChoice == 5)
             break;
-        }
     }
+    clearDisplay();
     return 0;
 }
 
-int autentification(serviceData &balanceAndCups) {
+int autentification(serviceData &variableValues) {
     clearDisplay();
 
     int userPin = 0;
@@ -431,8 +421,8 @@ int autentification(serviceData &balanceAndCups) {
     if (userPin == PIN)
         return 0;
     else {
-        balanceAndCups.auAttempts++;
-        if (balanceAndCups.auAttempts == 3) {
+        variableValues.auAttempts++;
+        if (variableValues.auAttempts == 3) {
             blockCoffeeMachine();
         }
         clearDisplay();
@@ -441,7 +431,7 @@ int autentification(serviceData &balanceAndCups) {
     return 1;
 }
 
-void printServiceMenu(serviceData &balanceAndCups) {
+void printServiceMenu(serviceData &variableValues) {
     cout << endl << "To check funds in the bill acceptor, click [ 1 ] " <<
         endl << "To check the number of cups, click [ 2 ] " <<
         endl << "For withdrawing funds from the bill acceptor, click [ 3 ] " <<
@@ -456,24 +446,28 @@ void printServiceMenu(serviceData &balanceAndCups) {
     cout << "Your choice? ";
 }
 
-void showСurrentBalance(serviceData &balanceAndCups) {
-    cout << endl << "Balance: " << balanceAndCups.balance << endl;
+void showСurrentBalance(serviceData &variableValues) {
+    clearDisplay();
+    cout << endl << "Balance: " << variableValues.balance << endl;
 }
 
-void showNumberCupsRemaining(serviceData &balanceAndCups) {
-    cout << endl << "Cups remaining: " << balanceAndCups.cups << endl;
+void showNumberCupsRemaining(serviceData &variableValues) {
+    clearDisplay();
+    cout << endl << "Cups remaining: " << variableValues.cups << endl;
 }
 
 void takeMoney(serviceData &balanceAndCups) {
+    clearDisplay();
     cout << endl << "Take money in the amount of: " << balanceAndCups.balance << " BYN." << endl;
     balanceAndCups.balance = 0;
 }
 
+// Нужно оставить лишь одну функцию
 void changeColour(int colour) {
     HANDLE hconsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hconsole, colour);
 }
-
+// Нужно оставить лишь одну функцию
 void setColorConsole(int colorText, int background) {
     HANDLE hConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsoleHandle, colorText | background);
