@@ -43,6 +43,7 @@ COFFEESHOP. Компания EspressoBiancci заказывает разрабо
 #include <windows.h>
 #include <string>
 #include <stdlib.h>
+#include <locale>
 
 using namespace std;
 
@@ -51,7 +52,6 @@ using namespace std;
 #define PRICEEXPRESSO 2.0
 #define PRICECAPUTHINO 2.5
 #define PRICELATTE 3.0
-
 
 struct serviceData {
     double balance;
@@ -73,7 +73,7 @@ int cookCoffee(serviceData &balanceAndCups, string nameCoffee, double price);
 int checkConditionsMakingCoffee(serviceData &balanceAndCups, double price);
 bool isEnoughMoney(serviceData &balanceAndCups, double price);
 bool isEnoughCups(serviceData &balanceAndCups);
-void showProcesCookCoffee(string nameCoffee);
+void showProcessCookCoffee(string nameCoffee);
 
 int selectServiceMenu(serviceData &balanceAndCups);
 void printServiceMenu(serviceData &balanceAndCups);
@@ -82,7 +82,7 @@ void showNumberCupsRemaining(serviceData &balanceAndCups);
 void takeMoney(serviceData &balanceAndCups);
 
 void clearDisplay();
-bool autentification(serviceData &balanceAndCups);
+int autentification(serviceData &balanceAndCups);
 void setColorConsole(int colorText, int background);
 void showErrorMessage(string message);
 void showSuccessfulMessage(string message);
@@ -90,10 +90,16 @@ void showSuccessfulMessage(string message);
 void changeColour(int colour);
 void printTitle();
 void printFooter();
-int checkInputUser(char data, int start, int end);
+int checkIntInputUserNumber(int data, int start, int end);
+double checkDoubleInputUserNumber(double data, double startLimit, double endLimit);
+int inputUserIntNumber(int value);
+double inputUserDoubleNumber(double value);
+void blockCoffeeMachine();
+
 
 int main()
 {
+    // Это зачем?
     const int LightCyan = 11;
     const int GREEN = 2;
     const int RED = 4;
@@ -101,31 +107,34 @@ int main()
     const int WHITE = 15;
     const int BRIGHTBLUE = 94;
 
+    cout.precision(2);
+    cout.setf(ios::fixed);
+
     // The first number - balance
     // The second number - count cups
     // The 3  number - authentication attempts
-    serviceData balanceAndCups = { 6.0, 7, 0 };
-
+    serviceData variableValues = { 6.0, 7, 0 };
     int userChoice = 0;
 
-    // Checking all ingredients are present and overflow balance
-    if (int result = initializationCoffeeMachine(balanceAndCups) != 0)
+    if (int result = initializationCoffeeMachine(variableValues) != 0) // Checking cups and overflow balance
         return result;
-    
+
     //outputGreeting(); // пока убрал для заголовка
 
     while (true) {
-        printMenu(balanceAndCups);
-        cin >> userChoice;
-        if (checkInputUser(userChoice, 1, 3) != 0) {
+        printMenu(variableValues);
+
+        userChoice = inputUserIntNumber(userChoice);
+        if (checkIntInputUserNumber(userChoice, 1, 3) != 0) {
             continue;
         }
+
         if (userChoice == 1)
-            putBalanceMoney(balanceAndCups);
+            putBalanceMoney(variableValues);
         else if (userChoice == 2)
-            selectCoffee(balanceAndCups);
+            selectCoffee(variableValues);
         else if (userChoice == 3)
-            selectServiceMenu(balanceAndCups);
+            selectServiceMenu(variableValues);
     }
     return 0;
 }
@@ -136,17 +145,14 @@ int initializationCoffeeMachine(serviceData &balanceAndCups) {
         return 1;
     }
     else if (balanceAndCups.cups == 0) {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="balanceAndCups"></param>
-        /// <returns></returns>
-        showErrorMessage("Error! The coffee machine cannot accept money.");
+        showErrorMessage("Error! The coffee machine has run out of cups.");
         return 2;
     }
     return 0;
 }
 
+
+// УБИРАЕМ?
 void outputGreeting() {
     changeColour(14);
     cout << endl << "[ * * * ESPRESSO BIANCCI  * * * ]" <<
@@ -161,6 +167,9 @@ void printMenu(serviceData &balanceAndCups) {
 
     changeColour(2); cout << endl << "[ ==> USER'S GUIDE: <== ]"; 
     changeColour(15); cout << endl << "To get our great coffee, select "; changeColour(2); cout << "[ 1 ]"; changeColour(15); cout << " and deposit the required amount.";
+    
+    // Это я добавил, оформи это красиво)
+    cout << endl << "Maximum amount 100 BYN!";
     changeColour(12); cout << endl << "PLEASE NOTE that the device DOES NOT RETURN CHANGE!";
     changeColour(15); cout << endl << "Then press "; changeColour(2); cout << "[ 2 ]"; changeColour(15); cout << " to select the type of coffee.";
     changeColour(15); cout << endl << "For service, press "; changeColour(2); cout << "[ 3 ]" << endl; 
@@ -185,30 +194,53 @@ void printFooter() {  // пока что не используется
 
 void printCountBalansAndCups(serviceData &balanceAndCups) {
     changeColour(11);
-    cout << endl << "Balance: " << balanceAndCups.balance << " BYN" << endl;
-    cout << "Cups: " << balanceAndCups.cups << endl;
+    cout << "Cups: " << balanceAndCups.cups;
+    if (balanceAndCups.balance < 10) {
+        cout << "         ";
+    }
+    else if (balanceAndCups.balance > 10 and balanceAndCups.balance < 100) {
+        cout << "        ";
+    }
+    else if (balanceAndCups.balance > 100) {
+        cout << "       ";
+    }
+    cout << "Balance: " << balanceAndCups.balance << " BYN" << endl;
     changeColour(15);
 }
 
 int putBalanceMoney(serviceData &balanceAndCups) {
-    clearDisplay();
+    clearDisplay();    
 
     if (isCupsExist(balanceAndCups) == false) {
         return 1;
     }
-    double changeBalanc = 0;
+    
     cout << "Put money: ";
-    cin >> changeBalanc;
-    if (changeBalanc <= 100.0) {
-        balanceAndCups.balance += changeBalanc;
-        clearDisplay();
-        showSuccessfulMessage(to_string(changeBalanc) + " BYN has been successfully credited to your account.");
-        return 0;
-    }
-    else {
-        showErrorMessage("The coffee machine accepts notes no more than 100 BYN.");
+    double changeBalanc = 0;
+    changeBalanc = inputUserDoubleNumber(changeBalanc);
+
+    if (checkDoubleInputUserNumber(changeBalanc, 0.01, 100.0) != 0) {
+        //showErrorMessage("Error! You have entered incorrect data. The coffee machine accepts notes no more than 100 BYN");
         return 2;
     }
+    else {
+        balanceAndCups.balance += changeBalanc;
+        clearDisplay();
+        
+        changeColour(10);
+        cout << changeBalanc << " BYN has been successfully credited to your account." << endl;
+        changeColour(15);
+        return 0;
+    }
+
+  /*  cin >> changeBalanc;
+    if (changeBalanc <= 100.0) {
+        
+    }
+    else {
+        showErrorMessage("Error! The coffee machine accepts notes no more than 100 BYN.");
+        return 2;
+    }*/
 }
 
 void clearDisplay() {
@@ -241,7 +273,12 @@ void selectCoffee(serviceData &balanceAndCups) {
     int userChoice = 0;
     while (true) {
         printMenuCoffee(balanceAndCups); 
-        cin >> userChoice;
+
+        userChoice = inputUserIntNumber(userChoice);
+        if (checkIntInputUserNumber(userChoice, 1, 4) != 0) {
+            continue;
+        }
+
         if (userChoice == 1) {
             clearDisplay();
             cookCoffee(balanceAndCups, "Expresso", PRICEEXPRESSO);
@@ -285,12 +322,12 @@ void printMenuCoffee(serviceData &balanceAndCups) {
 }
 
 int cookCoffee(serviceData &balanceAndCups, string nameCoffee, double price) {
-    showProcesCookCoffee(nameCoffee);
+    //showProcessCookCoffee(nameCoffee);
 
     if (int result = checkConditionsMakingCoffee(balanceAndCups, price) != 0)
         return result;
 
-    showProcesCookCoffee(nameCoffee);
+    showProcessCookCoffee(nameCoffee);
 
     showSuccessfulMessage(nameCoffee + " is ready.");
     balanceAndCups.balance = balanceAndCups.balance - price;
@@ -298,8 +335,25 @@ int cookCoffee(serviceData &balanceAndCups, string nameCoffee, double price) {
     return 0;
 }
 
-void showProcesCookCoffee(string nameCoffee) {
-
+void showProcessCookCoffee(string nameCoffee) {
+    int i = 0;
+    string strProgress = "";
+    while (i < 51)
+    {
+        Sleep(10);  
+        clearDisplay();
+        cout << "--------------------------------------------------" << std::endl;
+        cout << "          Expect your coffee to prepare          " << std::endl;
+        cout << "                        " << i*2 <<" %                         " << std::endl;
+        cout << strProgress << std::endl;
+        cout << "                                                  " << std::endl;
+        cout << "                                                  " << std::endl;
+        cout << "--------------------------------------------------" << std::endl;
+        strProgress = strProgress + "*";
+        i++;
+    }
+    Sleep(1000);
+    clearDisplay();
 }
 
 int checkConditionsMakingCoffee(serviceData &balanceAndCups, double price) {
@@ -327,8 +381,9 @@ bool isEnoughCups(serviceData &balanceAndCups) {
 }
 
 int selectServiceMenu(serviceData &balanceAndCups) {
-    if (autentification(balanceAndCups) == false) {
-        return 1;
+    int resultAu = autentification(balanceAndCups);
+    if (resultAu != 0) {
+        return resultAu;
     }
     else
         clearDisplay();
@@ -336,7 +391,12 @@ int selectServiceMenu(serviceData &balanceAndCups) {
     int userChoice = 0;
     while (true) {
         printServiceMenu(balanceAndCups);
-        cin >> userChoice;
+
+        userChoice = inputUserIntNumber(userChoice);
+        if (checkIntInputUserNumber(userChoice, 1, 5) != 0) {
+            continue;
+        }
+
         if (userChoice == 1) {
             clearDisplay();
             showСurrentBalance(balanceAndCups);
@@ -361,22 +421,24 @@ int selectServiceMenu(serviceData &balanceAndCups) {
     return 0;
 }
 
-bool autentification(serviceData &balanceAndCups) {
+int autentification(serviceData &balanceAndCups) {
     clearDisplay();
-    if (balanceAndCups.auAttempts > 2) {
-        showErrorMessage("The coffee machine is locked!");
-        return false;
-    }
-    int pin = 0;
+
+    int userPin = 0;
     cout << "Please, enter your PIN: ";
-    cin >> pin;
-    if (pin == PIN)
-        return true;
+    cin >> userPin;
+
+    if (userPin == PIN)
+        return 0;
     else {
         balanceAndCups.auAttempts++;
+        if (balanceAndCups.auAttempts == 3) {
+            blockCoffeeMachine();
+        }
+        clearDisplay();
         showErrorMessage("Error! Your PIN is not valid.");
     }
-    return false;
+    return 1;
 }
 
 void printServiceMenu(serviceData &balanceAndCups) {
@@ -417,11 +479,52 @@ void setColorConsole(int colorText, int background) {
     SetConsoleTextAttribute(hConsoleHandle, colorText | background);
 }
 
-int checkInputUser(char data, int start, int end) {
-    if ((int)data <= start or (int)data >= end) {
-        clearDisplay();
-        showErrorMessage("Error!");
-        return 1;
+int checkIntInputUserNumber(int data, int startLimit, int endLimit) {
+    // If user input incorrect value if cin function
+    if (!cin)
+    {
+        cin.clear(); // Check error input int
+        cin.ignore(10000, '\n'); // Clea buffer
     }
-    return 0;
+    // Check input limit
+    if (data >= startLimit and data <= endLimit) {
+         return 0;            
+    }
+    clearDisplay();
+    showErrorMessage("Error! You have entered incorrect data. Read the instructions carefully.");
+    return 1;
+}
+
+int inputUserIntNumber(int value) {
+    cin >> value;
+    return value;
+}
+
+double checkDoubleInputUserNumber(double data, double startLimit, double endLimit) {
+    // If user input incorrect value if cin function
+    if (!cin)
+    {
+        cin.clear(); // Check error input int
+        cin.ignore(10000, '\n'); // Clea buffer
+    }
+    // Check input limit
+    if (data >= startLimit and data <= endLimit) {
+        return 0;
+    }
+    clearDisplay();
+    showErrorMessage("Error! You have entered incorrect data. Read the instructions carefully.");
+    return 1;
+}
+
+double inputUserDoubleNumber(double value) {
+    cin >> value;
+    return value;
+}
+
+// Нужно офрмить блокировку
+void blockCoffeeMachine()
+{
+    clearDisplay();
+    cout << "blockCoffeeMachine";
+    while (true) { };
 }
