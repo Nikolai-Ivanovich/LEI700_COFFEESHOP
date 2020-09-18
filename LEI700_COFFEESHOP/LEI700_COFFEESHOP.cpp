@@ -39,9 +39,9 @@ using namespace std;
 
 struct serviceData {
     double balance;
+    double balanceCoffeeMachine;
     int cups;
     int auAttempts;
-    double balanceCoffeeMachine;
 };
 
 int initializationCoffeeMachine(serviceData& variableValues);
@@ -73,12 +73,12 @@ void showSuccessfulMessage(string message);
 void changeColour(int colour);
 void printTitle();
 void printTitleServiceMenu();
-int inputUserIntNumber(int value);
-int checkIntInputUserNumber(int data, int start, int end);
-double inputUserDoubleNumber(double value);
-double checkDoubleInputUserNumber(double data, double startLimit, double endLimit);
+int inputUserNumber(int value);
+double inputUserNumber(double value);
+int checkInputUserNumber(int value, int startValue, int endValue);
+double checkInputUserNumber(double value, double startValue, double endValue);
 void blockCoffeeMachine();
-
+void exitProgram();
 
 int main()
 {
@@ -86,9 +86,10 @@ int main()
     cout.setf(ios::fixed);
 
     // The first number - balance
-    // The second number - count cups
-    // The 3  number - authentication attempts
-    serviceData variableValues = { 6.0, 7, 0, 0};
+    // The second number - user balance
+    // The 3  number - count cups
+    // Authentication attempts
+    serviceData variableValues = { 6.0, 0.0, 7, 0, };
     int userChoice = 0;
     
     // Checking cups and overflow balance
@@ -98,10 +99,9 @@ int main()
     while (true) {
         printMenu(variableValues);
 
-        userChoice = inputUserIntNumber(userChoice);
-        if (checkIntInputUserNumber(userChoice, 1, 3) != 0) {
+        userChoice = inputUserNumber(userChoice);
+        if (checkInputUserNumber(userChoice, 1, 3) != 0)
             continue;
-        }
 
         if (userChoice == 1)
             putBalanceMoney(variableValues);
@@ -152,15 +152,12 @@ void printTitle() {
 void printCountBalansAndCups(serviceData& variableValues) {
     changeColour(11);
     cout << "Cups: " << variableValues.cups;
-    if (variableValues.balance < 10) {
+    if (variableValues.balance < 10)
         cout << "         ";
-    }
-    else if (variableValues.balance > 10 and variableValues.balance < 100) {
+    else if (variableValues.balance > 10 and variableValues.balance < 100)
         cout << "        ";
-    }
-    else if (variableValues.balance > 100) {
+    else if (variableValues.balance > 100)
         cout << "       ";
-    }
     cout << "Balance: " << variableValues.balance << " BYN" << endl;
     changeColour(15);
 }
@@ -168,15 +165,14 @@ void printCountBalansAndCups(serviceData& variableValues) {
 int putBalanceMoney(serviceData& variableValues) {
     clearDisplay();
 
-    if (isCupsExist(variableValues) == false) {
+    if (isCupsExist(variableValues) == false)
         return 1;
-    }
 
     cout << "Put money: ";
     double changeBalanc = 0;
-    changeBalanc = inputUserDoubleNumber(changeBalanc);
+    changeBalanc = inputUserNumber(changeBalanc);
 
-    if (checkDoubleInputUserNumber(changeBalanc, 0.01, 100.0) != 0) {
+    if (checkInputUserNumber(changeBalanc, 0.01, 100.0) != 0) {
         showErrorMessage("The coffee machine accepts notes no more than 100 BYN");
         return 2;
     }
@@ -223,10 +219,9 @@ void selectCoffee(serviceData& variableValues) {
     while (true) {
         printMenuCoffee(variableValues);
 
-        userChoice = inputUserIntNumber(userChoice);
-        if (checkIntInputUserNumber(userChoice, 1, 4) != 0) {
+        userChoice = inputUserNumber(userChoice);
+        if (checkInputUserNumber(userChoice, 1, 4) != 0)
             continue;
-        }
 
         if (userChoice == 1)
             cookCoffee(variableValues, "Expresso", PRICEEXPRESSO);
@@ -283,8 +278,7 @@ void showProcessCookCoffee(string nameCoffee) {
     string strProgress = "";
     
     changeColour(11);
-    while (i < 51)
-    {
+    while (i < 51) {
         Sleep(10);
         clearDisplay();
         cout << "--------------------------------------------------" << endl;
@@ -338,10 +332,9 @@ int selectServiceMenu(serviceData& variableValues) {
     while (true) {
         printServiceMenu(variableValues);
 
-        userChoice = inputUserIntNumber(userChoice);
-        if (checkIntInputUserNumber(userChoice, 1, 5) != 0) {
+        userChoice = inputUserNumber(userChoice);
+        if (checkInputUserNumber(userChoice, 1, 5) != 0)
             continue;
-        }
 
         if (userChoice == 1)
             showСurrentBalance(variableValues);
@@ -349,15 +342,18 @@ int selectServiceMenu(serviceData& variableValues) {
             showNumberCupsRemaining(variableValues);
         else if (userChoice == 3)
             takeMoney(variableValues);
-        else if (userChoice == 4) {
-            clearDisplay();
-            exit(0);
-        }
+        else if (userChoice == 4)
+            exitProgram();
         else if (userChoice == 5)
             break;
     }
     clearDisplay();
     return 0;
+}
+
+void exitProgram() {
+    clearDisplay();
+    exit(0);
 }
 
 int autentification(serviceData& variableValues) {
@@ -371,9 +367,8 @@ int autentification(serviceData& variableValues) {
         return 0;
     
     variableValues.auAttempts++;
-    if (variableValues.auAttempts == 3) {
+    if (variableValues.auAttempts == 3)
        blockCoffeeMachine();
-    }
     clearDisplay();
     showErrorMessage("Error! Your PIN is not valid.");   
     return 1;
@@ -429,15 +424,14 @@ void changeColour(int colour) {
     SetConsoleTextAttribute(hconsole, colour);
 }
 
-int checkIntInputUserNumber(int data, int startLimit, int endLimit) {
+int checkInputUserNumber(int value, int startValue, int endValue) {
     // If user input incorrect value if cin function
-    if (!cin)
-    {
+    if (!cin) {
         cin.clear(); // Check error input int
         cin.ignore(10000, '\n'); // Clea buffer
     }
     // Check input limit
-    if (data >= startLimit and data <= endLimit) {
+    if (value >= startValue and value <= endValue) {
         return 0;
     }
     clearDisplay();
@@ -445,20 +439,19 @@ int checkIntInputUserNumber(int data, int startLimit, int endLimit) {
     return 1;
 }
 
-int inputUserIntNumber(int value) {
+int inputUserNumber(int value) {
     cin >> value;
     return value;
 }
 
-double checkDoubleInputUserNumber(double data, double startLimit, double endLimit) {
+double checkInputUserNumber(double value, double startValue, double endValue) {
     // If user input incorrect value if cin function
-    if (!cin)
-    {
+    if (!cin) {
         cin.clear(); // Check error input int
         cin.ignore(10000, '\n'); // Clea buffer
     }
     // Check input limit
-    if (data >= startLimit and data <= endLimit) {
+    if (value >= startValue and value <= endValue) {
         return 0;
     }
     clearDisplay();
@@ -466,7 +459,7 @@ double checkDoubleInputUserNumber(double data, double startLimit, double endLimi
     return 1;
 }
 
-double inputUserDoubleNumber(double value) {
+double inputUserNumber(double value) {
     cin >> value;
     return value;
 }
