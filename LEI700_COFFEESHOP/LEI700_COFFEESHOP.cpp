@@ -1,9 +1,6 @@
 #include <iostream>
-#include <cstdlib>
 #include <windows.h>
-#include <string>
 #include <stdlib.h>
-#include <locale>
 
 using namespace std;
 
