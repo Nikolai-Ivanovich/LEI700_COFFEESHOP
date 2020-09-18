@@ -56,16 +56,14 @@ double checkInputUserNumber(double value, double startValue, double endValue);
 void blockCoffeeMachine();
 void exitProgram();
 
-int main()
-{
+int main() {
     cout.precision(2);
-    cout.setf(ios::fixed);
 
     // The first number - balance
     // The second number - user balance
-    // The 3  number - count cups
-    // Authentication attempts
-    serviceData variableValues = { 6.0, 0.0, 7, 0, };
+    // The 3 number - count cups
+    // The 4 number - Authentication attempts
+    serviceData variableValues = { 0.0, 0.0, 7, 0, };
     int userChoice = 0;
     
     // Checking cups and overflow balance
@@ -129,11 +127,11 @@ void printCountBalansAndCups(serviceData& variableValues) {
     changeColour(11);
     cout << "Cups: " << variableValues.cups;
     if (variableValues.balance < 10)
-        cout << "         ";
+        cout << "            ";
     else if (variableValues.balance > 10 and variableValues.balance < 100)
-        cout << "        ";
+        cout << "           ";
     else if (variableValues.balance > 100)
-        cout << "       ";
+        cout << "          ";
     cout << "Balance: " << variableValues.balance << " BYN" << endl;
     changeColour(15);
 }
@@ -152,15 +150,14 @@ int putBalanceMoney(serviceData& variableValues) {
         showErrorMessage("The coffee machine accepts notes no more than 100 BYN");
         return 2;
     }
-    else {
-        variableValues.balance += changeBalanc;
-        clearDisplay();
+    
+    variableValues.balance += changeBalanc;
+    clearDisplay();
 
-        changeColour(10);
-        cout << changeBalanc << " Your money has been successfully credited." << endl;
-        changeColour(15);
-        return 0;
-    }
+    changeColour(10);
+    cout << changeBalanc << " Your money has been successfully credited." << endl;
+    changeColour(15);
+    return 0;   
 }
 
 void clearDisplay() {
@@ -205,9 +202,8 @@ void selectCoffee(serviceData& variableValues) {
             cookCoffee(variableValues, "Cappuccino", PRICECAPUTHINO);
         else if (userChoice == 3)
             cookCoffee(variableValues, "Latte", PRICELATTE);
-        else if (userChoice == 4) {
+        else if (userChoice == 4)
             break;
-        }
     }
     clearDisplay();
 }
@@ -298,9 +294,8 @@ bool isEnoughCups(serviceData& variableValues) {
 
 int selectServiceMenu(serviceData& variableValues) {
     int resultAu = autentification(variableValues);
-    if (resultAu != 0) {
+    if (resultAu != 0)
         return resultAu;
-    }
     else
         clearDisplay();
 
@@ -388,11 +383,11 @@ void showNumberCupsRemaining(serviceData& variableValues) {
     cout << endl << "Cups remaining: " << variableValues.cups << endl;
 }
 
-void takeMoney(serviceData& balanceAndCups) {
+void takeMoney(serviceData& variableValues) {
     clearDisplay();
     changeColour(11);
-    cout << endl << "Was withdrawn from the bill acceptor: " << balanceAndCups.balanceCoffeeMachine + balanceAndCups.balance << " BYN." << endl;
-    balanceAndCups.balance = balanceAndCups.balanceCoffeeMachine = 0;
+    cout << endl << "Was withdrawn from the bill acceptor: " << variableValues.balanceCoffeeMachine + variableValues.balance << " BYN." << endl;
+    variableValues.balance = variableValues.balanceCoffeeMachine = 0;
 }
 
 void changeColour(int colour) {
@@ -401,10 +396,10 @@ void changeColour(int colour) {
 }
 
 int checkInputUserNumber(int value, int startValue, int endValue) {
-    // If user input incorrect value if cin function
+    // If user input incorrect value in cin function
     if (!cin) {
-        cin.clear(); // Check error input int
-        cin.ignore(10000, '\n'); // Clea buffer
+        cin.clear();                // Clear error
+        cin.ignore(10000, '\n');    // Clea buffer
     }
     // Check input limit
     if (value >= startValue and value <= endValue) {
@@ -421,15 +416,14 @@ int inputUserNumber(int value) {
 }
 
 double checkInputUserNumber(double value, double startValue, double endValue) {
-    // If user input incorrect value if cin function
+    // If user input incorrect value in cin function
     if (!cin) {
-        cin.clear(); // Check error input int
-        cin.ignore(10000, '\n'); // Clea buffer
+        cin.clear();                // Clear error
+        cin.ignore(10000, '\n');    // Clea buffer
     }
     // Check input limit
-    if (value >= startValue and value <= endValue) {
+    if (value >= startValue and value <= endValue)
         return 0;
-    }
     clearDisplay();
     showErrorMessage("Error! You have entered incorrect data. Read the instructions carefully.");
     return 1;
@@ -440,8 +434,7 @@ double inputUserNumber(double value) {
     return value;
 }
 
-void blockCoffeeMachine()
-{
+void blockCoffeeMachine() {
     clearDisplay();
     printTitle();
     changeColour(12);
