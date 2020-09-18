@@ -364,19 +364,18 @@ int autentification(serviceData& variableValues) {
     clearDisplay();
 
     int userPin = 0;
-    cout << "Please, enter your PIN: ";
+    cout << endl << "Please, enter your PIN: ";
     cin >> userPin;
 
     if (userPin == PIN)
         return 0;
-    else {
-        variableValues.auAttempts++;
-        if (variableValues.auAttempts == 3) {
-            blockCoffeeMachine();
-        }
-        clearDisplay();
-        showErrorMessage("Error! Your PIN is not valid.");
+    
+    variableValues.auAttempts++;
+    if (variableValues.auAttempts == 3) {
+       blockCoffeeMachine();
     }
+    clearDisplay();
+    showErrorMessage("Error! Your PIN is not valid.");   
     return 1;
 }
 
@@ -409,7 +408,7 @@ void showСurrentBalance(serviceData& variableValues) {
     clearDisplay();
     changeColour(11);
     cout << endl << "Unrealized funds: " << variableValues.balance;
-    cout << endl << "Total money in the bill acceptor: " << variableValues.balanceCoffeeMachine << endl;
+    cout << endl << "Total money in the bill acceptor: " << variableValues.balanceCoffeeMachine + variableValues.balance << endl;
 }
 
 void showNumberCupsRemaining(serviceData& variableValues) {
@@ -421,9 +420,8 @@ void showNumberCupsRemaining(serviceData& variableValues) {
 void takeMoney(serviceData& balanceAndCups) {
     clearDisplay();
     changeColour(11);
-    cout << endl << "Funds available for withdrawal: " << balanceAndCups.balanceCoffeeMachine << " BYN." << endl;
-    balanceAndCups.balance = 0;
-    balanceAndCups.balanceCoffeeMachine = 0;
+    cout << endl << "Was withdrawn from the bill acceptor: " << balanceAndCups.balanceCoffeeMachine + balanceAndCups.balance << " BYN." << endl;
+    balanceAndCups.balance = balanceAndCups.balanceCoffeeMachine = 0;
 }
 
 void changeColour(int colour) {
