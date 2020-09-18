@@ -63,9 +63,9 @@ int main() {
     // The 4 number - Authentication attempts
     serviceData variableValues = { 0.0, 0.0, 7, 0, };
     int userChoice = 0;
-    
+
     // Checking cups and overflow balance
-    if (int result = initializationCoffeeMachine(variableValues) != 0) 
+    if (int result = initializationCoffeeMachine(variableValues) != 0)
         return result;
 
     while (true) {
@@ -148,14 +148,14 @@ int putBalanceMoney(serviceData& variableValues) {
         showErrorMessage("The coffee machine accepts notes no more than 100 BYN");
         return 2;
     }
-    
+
     variableValues.balance += changeBalanc;
     clearDisplay();
 
     changeColour(10);
-    cout << changeBalanc << " Your money has been successfully credited." << endl;
+    cout << changeBalanc << " BYN. Your money has been successfully credited." << endl;
     changeColour(15);
-    return 0;   
+    return 0;
 }
 
 void clearDisplay() {
@@ -246,7 +246,7 @@ int cookCoffee(serviceData& variableValues, string nameCoffee, double price) {
 void showProcessCookCoffee(string nameCoffee) {
     int i = 0;
     string strProgress = "";
-    
+
     changeColour(11);
     while (i < 51) {
         Sleep(10);
@@ -334,12 +334,12 @@ int autentification(serviceData& variableValues) {
 
     if (userPin == PIN)
         return 0;
-    
+
     variableValues.auAttempts++;
     if (variableValues.auAttempts == 3)
-       blockCoffeeMachine();
+        blockCoffeeMachine();
     clearDisplay();
-    showErrorMessage("Error! Your PIN is not valid.");   
+    showErrorMessage("Error! Your PIN is not valid.");
     return 1;
 }
 
