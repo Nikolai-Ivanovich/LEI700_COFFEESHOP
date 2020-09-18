@@ -41,6 +41,7 @@ struct serviceData {
     double balance;
     int cups;
     int auAttempts;
+    double balanceCoffeeMachine;
 };
 
 int initializationCoffeeMachine(serviceData& variableValues);
@@ -78,7 +79,6 @@ double inputUserDoubleNumber(double value);
 double checkDoubleInputUserNumber(double data, double startLimit, double endLimit);
 void blockCoffeeMachine();
 
-double balanceCoffeeMachine;
 
 int main()
 {
@@ -88,7 +88,7 @@ int main()
     // The first number - balance
     // The second number - count cups
     // The 3  number - authentication attempts
-    serviceData variableValues = { 6.0, 7, 0 };
+    serviceData variableValues = { 6.0, 7, 0, 0};
     int userChoice = 0;
     
     // Checking cups and overflow balance
@@ -272,8 +272,8 @@ int cookCoffee(serviceData& variableValues, string nameCoffee, double price) {
     showProcessCookCoffee(nameCoffee);
 
     showSuccessfulMessage(nameCoffee + " is ready. Enjoy your coffee!");
-    variableValues.balance = variableValues.balance - price;
-    balanceCoffeeMachine += price;
+    variableValues.balance -= price;
+    variableValues.balanceCoffeeMachine += price;
     variableValues.cups = variableValues.cups - 1;
     return 0;
 }
@@ -409,7 +409,7 @@ void showСurrentBalance(serviceData& variableValues) {
     clearDisplay();
     changeColour(11);
     cout << endl << "Unrealized funds: " << variableValues.balance;
-    cout << endl << "Total money in the bill acceptor: " << balanceCoffeeMachine << endl;
+    cout << endl << "Total money in the bill acceptor: " << variableValues.balanceCoffeeMachine << endl;
 }
 
 void showNumberCupsRemaining(serviceData& variableValues) {
@@ -421,9 +421,9 @@ void showNumberCupsRemaining(serviceData& variableValues) {
 void takeMoney(serviceData& balanceAndCups) {
     clearDisplay();
     changeColour(11);
-    cout << endl << "Funds available for withdrawal: " << balanceCoffeeMachine << " BYN." << endl;
+    cout << endl << "Funds available for withdrawal: " << balanceAndCups.balanceCoffeeMachine << " BYN." << endl;
     balanceAndCups.balance = 0;
-    balanceCoffeeMachine = 0;
+    balanceAndCups.balanceCoffeeMachine = 0;
 }
 
 void changeColour(int colour) {
